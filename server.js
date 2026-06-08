@@ -46,7 +46,7 @@ app.use(cors({
 }));
 
 // Global rate limiter (100 req/15min per IP)
-app.use(rateLimit({
+app.set('trust proxy', 1);\napp.use(rateLimit({
   windowMs : 15 * 60 * 1000,
   max      : 100,
   message  : { success: false, message: 'Too many requests. Please try again later.' },
