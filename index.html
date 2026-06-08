@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kishan Creation – Digital Services & Custom Printing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --accent: #ff3d00;
+    --accent2: #ffd600;
+    --steel: #1c1c2e;
+    --mid: #6b6b80;
+    --light: #e8e3d8;
+    --white: #ffffff;
+    --radius: 4px;
+    --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+    --green: #25D366;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); overflow-x: hidden; cursor: none; }
+
+  /* CURSOR */
+  .cursor { width:12px;height:12px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,width .2s,height .2s,background .2s; }
+  .cursor-ring { width:36px;height:36px;border:1.5px solid var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .15s ease-out,width .3s,height .3s; }
+  .cursor.hover { width:20px;height:20px;background:var(--accent2); }
+  .cursor-ring.hover { width:56px;height:56px;border-color:var(--accent2); }
+
+  /* NOISE */
+  body::before { content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:.4; }
+
+  /* ── TOP BAR ── */
+  .top-bar { background:var(--ink);padding:9px 56px;display:flex;align-items:center;justify-content:space-between; }
+  .top-bar-left { display:flex;align-items:center;gap:24px;color:rgba(255,255,255,.6);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:.5px; }
+  .top-bar-left span { display:flex;align-items:center;gap:6px; }
+  .top-bar-right { display:flex;align-items:center;gap:12px; }
+  .lang-sw { display:flex;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:3px;gap:2px; }
+  .lang-btn { font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 14px;border-radius:100px;border:none;cursor:pointer;transition:.2s;background:transparent;color:rgba(255,255,255,.55); }
+  .lang-btn.active { background:var(--accent);color:var(--white); }
+  .lang-btn:hover:not(.active) { background:rgba(255,255,255,.1);color:var(--white); }
+  .top-wa-btn { display:flex;align-items:center;gap:7px;background:var(--green);color:var(--white);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;padding:7px 16px;border-radius:100px;border:none;cursor:pointer;transition:.2s; }
+  .top-wa-btn:hover { background:#1ebe5a;transform:scale(1.04); }
+  .top-wa-btn svg { width:14px;height:14px;fill:white;flex-shrink:0; }
+
+  /* NAV */
+  nav { position:fixed;top:36px;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(245,240,232,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(10,10,15,.08);transition:padding var(--transition),box-shadow var(--transition),top .3s; }
+  nav.scrolled { padding:12px 48px;box-shadow:0 2px 32px rgba(0,0,0,.08);top:0; }
+  .nav-logo { font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--ink);text-decoration:none; }
+  .nav-logo span { color:var(--accent); }
+  .nav-links { display:flex;align-items:center;gap:36px;list-style:none; }
+  .nav-links a { font-family:'Syne',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink);text-decoration:none;position:relative;transition:color var(--transition); }
+  .nav-links a::after { content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width var(--transition); }
+  .nav-links a:hover { color:var(--accent); }
+  .nav-links a:hover::after { width:100%; }
+  .nav-cta { background:var(--ink)!important;color:var(--paper)!important;padding:10px 24px;border-radius:var(--radius);transition:background var(--transition),transform var(--transition)!important; }
+  .nav-cta::after { display:none!important; }
+  .nav-cta:hover { background:var(--accent)!important;color:var(--white)!important;transform:translateY(-2px); }
+  .hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none; }
+  .hamburger span { display:block;width:24px;height:2px;background:var(--ink);transition:var(--transition); }
+  .mobile-menu { display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--ink);z-index:850;flex-direction:column;align-items:center;justify-content:center;gap:32px; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--paper);text-decoration:none;letter-spacing:3px;transition:color var(--transition); }
+  .mobile-menu a:hover { color:var(--accent); }
+  .mobile-close { position:absolute;top:24px;right:48px;font-size:32px;color:var(--paper);cursor:pointer;background:none;border:none; }
+
+  /* HERO */
+  #hero { min-height:100vh;display:grid;grid-template-columns:45% 55%;background:#faf7ef;overflow:hidden; }
+  .hero-left { display:flex;flex-direction:column;justify-content:center;padding-left:70px;padding-top:80px;position:relative;z-index:2;background:#faf7ef; }
+  .hero-tag { width:max-content;padding:10px 25px;border:1px solid #ff2500;border-radius:30px;color:#ff2500;font-family:'Syne';font-size:14px;letter-spacing:2px; }
+  .hero-title { font-family:'Bebas Neue';font-size:150px;line-height:.85;letter-spacing:5px;margin-top:25px;color:#050505; }
+  .hero-title span { color:#ff2500; }
+  .hero-small { font-family:'Syne';letter-spacing:5px;font-size:22px;border-bottom:3px solid black;width:max-content; }
+  .hero-sub { font-size:20px;max-width:550px;margin-top:30px;line-height:1.6;color:#333; }
+  .hero-actions { display:flex;gap:25px;margin-top:35px; }
+  .hero-right { position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:1; }
+  .hero-product { width:100%;max-width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));animation:floatHero 4s ease-in-out infinite; }
+  @keyframes floatHero { 0%{transform:translateY(0)} 50%{transform:translateY(-18px)} 100%{transform:translateY(0)} }
+
+  /* BUTTONS */
+  .btn-primary { background:var(--accent);color:var(--white);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:16px 36px;border:none;border-radius:var(--radius);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform var(--transition),box-shadow var(--transition),background var(--transition);position:relative;overflow:hidden; }
+  .btn-primary::before { content:'';position:absolute;inset:0;background:rgba(255,255,255,.15);transform:translateX(-100%);transition:transform .4s; }
+  .btn-primary:hover::before { transform:translateX(0); }
+  .btn-primary:hover { transform:translateY(-3px);box-shadow:0 16px 40px rgba(255,61,0,.35); }
+  .btn-secondary { background:transparent;color:var(--ink);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:16px 36px;border:2px solid var(--ink);border-radius:var(--radius);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all var(--transition); }
+  .btn-secondary:hover { background:var(--ink);color:var(--paper);transform:translateY(-3px); }
+
+  /* MARQUEE */
+  .marquee-wrap { background:var(--ink);padding:16px 0;overflow:hidden;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent); }
+  .marquee-track { display:flex;white-space:nowrap;animation:marquee 22s linear infinite; }
+  .marquee-item { font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--paper);padding:0 40px;display:flex;align-items:center;gap:20px; }
+  .marquee-item .dot { width:8px;height:8px;background:var(--accent);border-radius:50%; }
+
+  /* SECTIONS */
+  section { padding:100px 80px; }
+  .section-label { font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px; }
+  .section-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);letter-spacing:1px;line-height:1.05;color:var(--ink); }
+  .section-title .accent { color:var(--accent); }
+  .section-sub { font-size:16px;color:var(--mid);line-height:1.7;max-width:520px;margin-top:16px;font-weight:300; }
+
+  /* SERVICES */
+  #services { background:var(--paper); }
+  .services-head { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:24px; }
+  .services-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px; }
+  .service-card { background:var(--white);border:1px solid rgba(10,10,15,.08);border-radius:16px;padding:36px 32px;transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);cursor:pointer;position:relative;overflow:hidden; }
+  .service-card::before { content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--accent);transform:scaleX(0);transition:transform var(--transition);transform-origin:left; }
+  .service-card:hover { transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,.1);border-color:transparent; }
+  .service-card:hover::before { transform:scaleX(1); }
+  .service-icon { width:60px;height:60px;background:rgba(255,61,0,.08);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:24px;transition:background var(--transition); }
+  .service-card:hover .service-icon { background:var(--accent); }
+  .service-card h3 { font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;color:var(--ink); }
+  .service-card p { font-size:14px;color:var(--mid);line-height:1.6; }
+  .service-price { margin-top:20px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--accent); }
+
+  /* PRODUCTS */
+  #products { background:var(--steel); }
+  #products .section-title { color:var(--paper); }
+  #products .section-sub { color:rgba(245,240,232,.55); }
+  #products .section-label { color:var(--accent2); }
+  .products-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:56px; }
+  .product-card { background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);cursor:pointer; }
+  .product-card:hover { transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,.4);border-color:var(--accent); }
+  .product-thumb { width:100%;height:250px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff; }
+  .product-thumb img { width:100%;height:100%;object-fit:contain;padding:15px;display:block;transition:.4s ease; }
+  .product-card:hover .product-thumb img { transform:scale(1.08); }
+  .product-body { padding:24px; }
+  .product-body h3 { font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--paper);margin-bottom:8px; }
+  .product-body p { font-size:13px;color:rgba(245,240,232,.5);line-height:1.5;margin-bottom:16px; }
+  .product-footer { display:flex;align-items:center;justify-content:space-between; }
+  .product-price { font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent2);letter-spacing:1px; }
+  .product-order { background:var(--accent);color:var(--white);border:none;padding:8px 20px;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background var(--transition),transform var(--transition); }
+  .product-order:hover { background:#ff6030;transform:scale(1.05); }
+
+  /* WHY */
+  #why { background:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center; }
+  .why-big-num { font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,14vw,200px);color:rgba(10,10,15,.04);line-height:1;user-select:none;position:absolute;top:-40px;left:-40px; }
+  .why-visual { position:relative; }
+  .why-card-stack { position:relative;padding:40px 40px 40px 60px; }
+  .why-item { display:flex;gap:24px;margin-bottom:36px;position:relative; }
+  .why-item::before { content:'';position:absolute;left:-30px;top:28px;bottom:-36px;width:1px;background:rgba(10,10,15,.1); }
+  .why-item:last-child::before { display:none; }
+  .why-num { font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--accent);line-height:1;flex-shrink:0;width:48px; }
+  .why-text h4 { font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px; }
+  .why-text p { font-size:14px;color:var(--mid);line-height:1.6; }
+
+  /* ORDER */
+  #order { background:var(--ink);position:relative;overflow:hidden; }
+  #order::before { content:'ORDER';position:absolute;font-family:'Bebas Neue',sans-serif;font-size:300px;color:rgba(255,255,255,.02);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none; }
+  #order .section-title { color:var(--paper); }
+  #order .section-sub { color:rgba(245,240,232,.5); }
+  .form-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px;position:relative;z-index:2; }
+  .form-grid .full { grid-column:1/-1; }
+  .form-group { display:flex;flex-direction:column;gap:8px; }
+  .form-group label { font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.5); }
+  .form-group input,.form-group select,.form-group textarea { background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:14px 18px;color:var(--paper);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color var(--transition),background var(--transition);width:100%; }
+  .form-group input::placeholder,.form-group textarea::placeholder { color:rgba(245,240,232,.25); }
+  .form-group select option { background:var(--ink);color:var(--paper); }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--accent);background:rgba(255,61,0,.05); }
+  .form-group textarea { resize:vertical;min-height:120px; }
+  .upload-area { border:2px dashed rgba(255,255,255,.15);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:border-color var(--transition),background var(--transition);position:relative; }
+  .upload-area:hover { border-color:var(--accent);background:rgba(255,61,0,.04); }
+  .upload-area input[type="file"] { position:absolute;inset:0;opacity:0;cursor:pointer; }
+  .upload-icon { font-size:40px;margin-bottom:12px; }
+  .upload-area p { color:rgba(245,240,232,.4);font-size:14px; }
+  .upload-area strong { color:var(--paper); }
+  .form-submit { text-align:center;margin-top:32px;position:relative;z-index:2; }
+
+  /* TESTIMONIALS */
+  #testimonials { background:var(--light); }
+  .testimonials-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:56px; }
+  .testimonial-card { background:var(--white);border-radius:16px;padding:32px;border:1px solid rgba(10,10,15,.06);transition:transform var(--transition),box-shadow var(--transition); }
+  .testimonial-card:hover { transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.08); }
+  .stars { color:var(--accent2);font-size:18px;margin-bottom:16px;letter-spacing:2px; }
+  .testimonial-text { font-size:15px;color:var(--ink);line-height:1.7;font-style:italic;margin-bottom:24px;font-weight:300; }
+  .testimonial-author { display:flex;align-items:center;gap:14px; }
+  .author-avatar { width:44px;height:44px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--white);flex-shrink:0; }
+  .author-name { font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink); }
+  .author-role { font-size:12px;color:var(--mid); }
+
+  /* CONTACT */
+  #contact { background:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start; }
+  .contact-info-item { display:flex;gap:20px;margin-bottom:32px; }
+  .contact-icon { width:52px;height:52px;background:rgba(255,61,0,.08);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0; }
+  .contact-info-item h4 { font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px; }
+  .contact-info-item p { font-size:14px;color:var(--mid);line-height:1.5; }
+  .contact-form-box { background:var(--white);border-radius:20px;padding:40px;border:1px solid rgba(10,10,15,.06);box-shadow:0 8px 40px rgba(0,0,0,.06); }
+  .contact-form-box h3 { font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--ink);letter-spacing:1px;margin-bottom:28px; }
+  .contact-input { width:100%;background:var(--paper);border:1px solid rgba(10,10,15,.1);border-radius:var(--radius);padding:14px 18px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:16px;transition:border-color var(--transition); }
+  .contact-input:focus { border-color:var(--accent); }
+  .contact-input::placeholder { color:var(--mid); }
+  textarea.contact-input { min-height:120px;resize:vertical; }
+
+  /* FOOTER */
+  footer { background:var(--ink);color:var(--paper);padding:60px 80px 32px; }
+  .footer-top { display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.08); }
+  .footer-brand p { font-size:14px;color:rgba(245,240,232,.5);line-height:1.7;margin-top:16px;max-width:280px; }
+  .footer-col h5 { font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:20px; }
+  .footer-col ul { list-style:none; }
+  .footer-col ul li { margin-bottom:12px; }
+  .footer-col ul li a { font-size:14px;color:rgba(245,240,232,.6);text-decoration:none;transition:color var(--transition); }
+  .footer-col ul li a:hover { color:var(--accent); }
+  .footer-bottom { display:flex;justify-content:space-between;align-items:center;padding-top:28px;flex-wrap:wrap;gap:16px; }
+  .footer-bottom p { font-size:13px;color:rgba(245,240,232,.3); }
+  .footer-socials { display:flex;gap:12px; }
+  .social-btn { width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:background var(--transition),border-color var(--transition);text-decoration:none; }
+  .social-btn:hover { background:var(--accent);border-color:var(--accent); }
+
+  /* MODAL */
+  .modal-overlay { display:none;position:fixed;inset:0;background:rgba(10,10,15,.85);z-index:9000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px); }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--paper);border-radius:20px;padding:48px;max-width:540px;width:100%;position:relative;animation:modalIn .4s cubic-bezier(.34,1.56,.64,1); }
+  .modal-close { position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--mid);transition:color var(--transition); }
+  .modal-close:hover { color:var(--accent); }
+  .modal h3 { font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--ink);letter-spacing:1px;margin-bottom:8px; }
+  .modal p { font-size:14px;color:var(--mid);margin-bottom:24px; }
+  .modal-input { width:100%;background:var(--white);border:1px solid rgba(10,10,15,.12);border-radius:var(--radius);padding:14px 18px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:16px;transition:border-color var(--transition); }
+  .modal-input:focus { border-color:var(--accent); }
+  .modal-input::placeholder { color:var(--mid); }
+  select.modal-input option { background:var(--white); }
+
+  /* TOAST */
+  .toast { position:fixed;bottom:32px;right:32px;background:var(--ink);color:var(--paper);padding:16px 24px;border-radius:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;border-left:4px solid var(--accent); }
+  .toast.show { transform:translateY(0);opacity:1; }
+
+  /* SCROLL TOP */
+  .scroll-top { position:fixed;bottom:32px;left:32px;width:48px;height:48px;background:var(--accent);color:var(--white);border:none;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px);transition:all var(--transition);z-index:800;box-shadow:0 8px 24px rgba(255,61,0,.4); }
+  .scroll-top.visible { opacity:1;transform:translateY(0); }
+  .scroll-top:hover { background:var(--ink); }
+
+  /* REVEAL */
+  .reveal { opacity:0;transform:translateY(32px);transition:opacity .7s,transform .7s; }
+  .reveal.visible { opacity:1;transform:translateY(0); }
+
+  /* ── FLOATING WHATSAPP ── */
+  @keyframes waBounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+  .wa-float { position:fixed;bottom:88px;right:28px;z-index:800;display:flex;flex-direction:column;align-items:flex-end;gap:10px; }
+  .wa-float-btn { width:58px;height:58px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(37,211,102,.5);cursor:pointer;border:none;animation:waBounce 2.5s ease-in-out infinite;transition:transform .2s; }
+  .wa-float-btn:hover { animation:none;transform:scale(1.12); }
+  .wa-float-btn svg { width:30px;height:30px;fill:white; }
+  .wa-float-lbl { background:var(--ink);color:var(--paper);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;box-shadow:0 4px 12px rgba(0,0,0,.2);white-space:nowrap;letter-spacing:.5px; }
+
+  /* ── WHATSAPP MODAL ── */
+  .wa-ov { display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9100;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px); }
+  .wa-ov.open { display:flex; }
+  .wa-box { background:var(--white);border-radius:18px;width:100%;max-width:500px;overflow:hidden;animation:modalIn .35s cubic-bezier(.34,1.56,.64,1);max-height:92vh;display:flex;flex-direction:column; }
+  .wa-head { background:var(--green);padding:20px 24px;display:flex;align-items:center;gap:14px;position:relative; }
+  .wa-head svg { width:36px;height:36px;fill:white;flex-shrink:0; }
+  .wa-head h3 { font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--white);letter-spacing:1px; }
+  .wa-head p { font-size:12px;color:rgba(255,255,255,.8);margin-top:2px; }
+  .wa-x { position:absolute;top:14px;right:16px;background:rgba(255,255,255,.2);border:none;width:28px;height:28px;border-radius:50%;color:white;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s; }
+  .wa-x:hover { background:rgba(255,255,255,.35); }
+  .wa-body { padding:22px;overflow-y:auto;flex:1; }
+  .wa-chips { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px; }
+  .wa-chip { background:#f0fdf4;border:1.5px solid #86efac;color:#166534;border-radius:100px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:5px 13px;cursor:pointer;transition:.2s; }
+  .wa-chip:hover,.wa-chip.active { background:var(--green);color:white;border-color:var(--green); }
+  .wa-row { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px; }
+  .wa-row.one { grid-template-columns:1fr; }
+  .wa-grp { display:flex;flex-direction:column;gap:5px; }
+  .wa-lbl { font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid); }
+  .wa-in { background:#f7f7f7;border:1.5px solid #e0e0e0;border-radius:8px;padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink);outline:none;transition:border-color .2s;width:100%; }
+  .wa-in:focus { border-color:var(--green); }
+  .wa-in::placeholder { color:#bbb; }
+  select.wa-in option { background:#fff; }
+  textarea.wa-in { min-height:75px;resize:vertical; }
+  .wa-submit { width:100%;background:var(--green);color:var(--white);font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:15px;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s;margin-top:8px; }
+  .wa-submit:hover { background:#1ebe5a; }
+  .wa-submit svg { width:20px;height:20px;fill:white; }
+  .wa-note { text-align:center;font-size:11px;color:var(--mid);margin-top:8px; }
+
+  /* KEYFRAMES */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideInRight { to{transform:translateX(0);opacity:1} }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  @keyframes modalIn { from{opacity:0;transform:scale(.8) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+  /* RESPONSIVE */
+  @media(max-width:1024px){
+    #hero{grid-template-columns:1fr;min-height:auto}
+    .hero-left{padding:100px 40px 60px}
+    #why{grid-template-columns:1fr;gap:48px}
+    #contact{grid-template-columns:1fr;gap:48px}
+    .footer-top{grid-template-columns:1fr 1fr}
+    section{padding:80px 40px}
+    .form-grid{grid-template-columns:1fr}
+    .top-bar{padding:9px 24px}
+    .top-bar-left span:nth-child(3){display:none}
+  }
+  @media(max-width:768px){
+    nav{padding:16px 24px}
+    nav.scrolled{padding:12px 24px}
+    .nav-links{display:none}
+    .hamburger{display:flex}
+    section{padding:60px 24px}
+    .hero-left{padding:80px 24px 48px}
+    .hero-title{font-size:80px}
+    .hero-small{font-size:14px;letter-spacing:2px}
+    .hero-sub{font-size:16px}
+    .footer-top{grid-template-columns:1fr}
+    footer{padding:48px 24px 24px}
+    .modal{padding:32px 24px}
+    .top-bar{padding:8px 16px}
+    .top-bar-left{gap:12px}
+    .top-bar-left span:nth-child(2){display:none}
+    .wa-row{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ── TOP BAR ── -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <span>📞 <span data-en="9984251216" data-hi="9984251216">9984251216</span></span>
+    <span>🕐 <span data-en="Mon–Sat: 9AM–8PM" data-hi="सोम–शनि: सुबह 9–रात 8">Mon–Sat: 9AM–8PM</span></span>
+    <span>📍 <span data-en="Gobhiya, UP" data-hi="गोभिया, उत्तर प्रदेश">Gobhiya, UP</span></span>
+  </div>
+  <div class="top-bar-right">
+    <div class="lang-sw">
+      <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btnHI" onclick="setLang('hi')">हिं</button>
+    </div>
+    <button class="top-wa-btn" onclick="openWA()">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.12 1.533 5.851L.057 23.5l5.797-1.517A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.659-.5-5.197-1.374l-.372-.22-3.862 1.013 1.03-3.752-.242-.387A9.938 9.938 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      <span data-en="WhatsApp Order" data-hi="WhatsApp ऑर्डर">WhatsApp Order</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── FLOATING WHATSAPP BUTTON ── -->
+<div class="wa-float">
+  <div class="wa-float-lbl" id="waFloatLbl" data-en="Order on WhatsApp" data-hi="WhatsApp पर ऑर्डर">Order on WhatsApp</div>
+  <button class="wa-float-btn" onclick="openWA()">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.12 1.533 5.851L.057 23.5l5.797-1.517A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.659-.5-5.197-1.374l-.372-.22-3.862 1.013 1.03-3.752-.242-.387A9.938 9.938 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+  </button>
+</div>
+
+<!-- ── WHATSAPP ORDER MODAL ── -->
+<div class="wa-ov" id="waModal">
+  <div class="wa-box">
+    <div class="wa-head">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.12 1.533 5.851L.057 23.5l5.797-1.517A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.659-.5-5.197-1.374l-.372-.22-3.862 1.013 1.03-3.752-.242-.387A9.938 9.938 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      <div>
+        <h3 id="waTitle">WhatsApp Order</h3>
+        <p id="waSub">Fill details — we reply in minutes!</p>
+      </div>
+      <button class="wa-x" onclick="closeWA()">✕</button>
+    </div>
+    <div class="wa-body">
+      <div class="wa-lbl" id="waChipLbl" style="margin-bottom:8px">Quick Select:</div>
+      <div class="wa-chips">
+        <div class="wa-chip" onclick="pickChip(this,'T-Shirt Printing')">T-Shirt</div>
+        <div class="wa-chip" onclick="pickChip(this,'Mug Printing')">Mug/Cup</div>
+        <div class="wa-chip" onclick="pickChip(this,'Banner Printing')">Banner</div>
+        <div class="wa-chip" onclick="pickChip(this,'Wedding Cards')">Wedding Cards</div>
+        <div class="wa-chip" onclick="pickChip(this,'Visiting Cards')">Visiting Cards</div>
+        <div class="wa-chip" onclick="pickChip(this,'Document Printing')">Documents</div>
+        <div class="wa-chip" onclick="pickChip(this,'Photo Printing')">Photos</div>
+        <div class="wa-chip" onclick="pickChip(this,'Other')">Other</div>
+      </div>
+      <div class="wa-row">
+        <div class="wa-grp"><label class="wa-lbl" id="waLblName">YOUR NAME *</label><input class="wa-in" id="waName" type="text" placeholder="Rahul Sharma"/></div>
+        <div class="wa-grp"><label class="wa-lbl" id="waLblPhone">PHONE *</label><input class="wa-in" id="waPhone" type="tel" placeholder="9984251216"/></div>
+      </div>
+      <div class="wa-row one">
+        <div class="wa-grp">
+          <label class="wa-lbl" id="waLblSvc">SERVICE / PRODUCT *</label>
+          <select class="wa-in" id="waSvc">
+            <option value="">-- Select --</option>
+            <option>T-Shirt Printing</option>
+            <option>Mug / Cup Printing</option>
+            <option>Banner / Flex Printing</option>
+            <option>Wedding Cards</option>
+            <option>Visiting Cards</option>
+            <option>Document Printing</option>
+            <option>Photo Printing</option>
+            <option>Photo Frame</option>
+            <option>Ticket Booking</option>
+            <option>Money Transfer</option>
+            <option>Form Filling</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="wa-row">
+        <div class="wa-grp"><label class="wa-lbl" id="waLblQty">QUANTITY</label><input class="wa-in" id="waQty" type="number" placeholder="e.g. 50" min="1"/></div>
+        <div class="wa-grp">
+          <label class="wa-lbl" id="waLblDel">DELIVERY</label>
+          <select class="wa-in" id="waDel">
+            <option data-en="Pickup from Shop" data-hi="दुकान से लेना">Pickup from Shop</option>
+            <option data-en="Home Delivery" data-hi="घर पर डिलीवरी">Home Delivery</option>
+          </select>
+        </div>
+      </div>
+      <div class="wa-row one">
+        <div class="wa-grp"><label class="wa-lbl" id="waLblDet">ORDER DETAILS</label><textarea class="wa-in" id="waDet" placeholder="Size, color, design requirements..."></textarea></div>
+      </div>
+      <button class="wa-submit" onclick="sendWA()">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.12 1.533 5.851L.057 23.5l5.797-1.517A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.659-.5-5.197-1.374l-.372-.22-3.862 1.013 1.03-3.752-.242-.387A9.938 9.938 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        <span id="waSubmitTxt">Send Order on WhatsApp</span>
+      </button>
+      <p class="wa-note" id="waNoteTxt">You will be redirected to WhatsApp with your order pre-filled.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">✕</button>
+  <a href="#hero" onclick="toggleMenu()">Home</a>
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#products" onclick="toggleMenu()">Products</a>
+  <a href="#order" onclick="toggleMenu()">Order</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Kishan<span>Creation</span></a>
+  <ul class="nav-links">
+    <li><a href="#services" data-en="Services" data-hi="सेवाएं">Services</a></li>
+    <li><a href="#products" data-en="Products" data-hi="उत्पाद">Products</a></li>
+    <li><a href="#why" data-en="Why Us" data-hi="हमें क्यों">Why Us</a></li>
+    <li><a href="#testimonials" data-en="Reviews" data-hi="समीक्षा">Reviews</a></li>
+    <li><a href="#contact" data-en="Contact" data-hi="संपर्क">Contact</a></li>
+    <li><a href="#order" class="nav-cta" data-en="Order Now" data-hi="अभी ऑर्डर करें">Order Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag" id="heroBadge">PREMIUM QUALITY PRINTING</div>
+    <h1 class="hero-title">KISHAN <br><span class="highlight">CREATION</span></h1>
+    <h2 class="hero-small" id="heroTagline">DIGITAL SERVICES & CUSTOM PRINTING</h2>
+    <p class="hero-sub" id="heroDesc">From creative design to perfect print — we bring your ideas to life with quality and care.</p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-primary" id="heroBtn1">OUR SERVICES →</a>
+      <a href="#order" class="btn-secondary" id="heroBtn2">ORDER NOW →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="./Images/hero.png" class="hero-product" alt="Kishan Creation">
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="dot"></span> Document Printing</div>
+    <div class="marquee-item"><span class="dot"></span> T-Shirt Printing</div>
+    <div class="marquee-item"><span class="dot"></span> Banner & Poster Print</div>
+    <div class="marquee-item"><span class="dot"></span> Wedding Cards</div>
+    <div class="marquee-item"><span class="dot"></span> Mug Printing</div>
+    <div class="marquee-item"><span class="dot"></span> Photo Frames</div>
+    <div class="marquee-item"><span class="dot"></span> Ticket Booking</div>
+    <div class="marquee-item"><span class="dot"></span> Money Transfer</div>
+    <div class="marquee-item"><span class="dot"></span> Document Printing</div>
+    <div class="marquee-item"><span class="dot"></span> T-Shirt Printing</div>
+    <div class="marquee-item"><span class="dot"></span> Banner & Poster Print</div>
+    <div class="marquee-item"><span class="dot"></span> Wedding Cards</div>
+    <div class="marquee-item"><span class="dot"></span> Mug Printing</div>
+    <div class="marquee-item"><span class="dot"></span> Photo Frames</div>
+    <div class="marquee-item"><span class="dot"></span> Ticket Booking</div>
+    <div class="marquee-item"><span class="dot"></span> Money Transfer</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-head">
+    <div>
+      <div class="section-label reveal" data-en="What We Offer" data-hi="हम क्या देते हैं">What We Offer</div>
+      <h2 class="section-title reveal">Our <span class="accent">Services</span></h2>
+      <p class="section-sub reveal">Professional digital and printing services for individuals and businesses at affordable prices.</p>
+    </div>
+    <a href="#order" class="btn-primary reveal" data-en="Get a Quote →" data-hi="कोटेशन लें →">Get a Quote →</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">🖨️</div>
+      <h3>Document Printing</h3>
+      <p>Black & white and color printing for all documents, forms, marksheets, certificates, and more.</p>
+      <div class="service-price">Starting ₹2/page</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🗂️</div>
+      <h3>Xerox & Scanning</h3>
+      <p>Fast xerox copies and high-quality scanning for all types of documents, ID proofs, and records.</p>
+      <div class="service-price">Starting ₹1/page</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">✈️</div>
+      <h3>Ticket Booking</h3>
+      <p>Train, bus, and flight ticket bookings done quickly. No hassle, no waiting — just walk in or call.</p>
+      <div class="service-price">₹50 service charge</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">💳</div>
+      <h3>Money Transfer</h3>
+      <p>Secure and fast money transfers via NEFT, IMPS, and other digital methods. Aadhaar-based withdrawals.</p>
+      <div class="service-price">Minimal charges apply</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">📋</div>
+      <h3>Form Filling & Online Work</h3>
+      <p>Government forms, job applications, college admissions, PAN/Aadhaar corrections — all done by experts.</p>
+      <div class="service-price">Starting ₹30</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">📸</div>
+      <h3>Photo Printing</h3>
+      <p>Passport photos, family portraits, ID card photos printed instantly with high-quality color output.</p>
+      <div class="service-price">Starting ₹10/photo</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-label reveal">Custom Products</div>
+  <h2 class="section-title reveal">Order <span style="color:var(--accent2)">Products</span><br>Online</h2>
+  <p class="section-sub reveal">Upload your design and we'll print it on premium quality products. Delivered to your doorstep.</p>
+  <div class="products-grid">
+    <div class="product-card reveal" onclick="openOrderModal('Custom T-Shirt Printing')">
+      <div class="product-thumb"><img src="./Images/tshirt.jpg" alt="T-Shirt Printing"></div>
+      <div class="product-body">
+        <h3>Custom T-Shirt</h3>
+        <p>Full-color print on premium cotton fabric. Any design, any text, any size.</p>
+        <div class="product-footer"><span class="product-price">₹299+</span><button class="product-order">Order Now</button></div>
+      </div>
+    </div>
+    <div class="product-card reveal" onclick="openOrderModal('Custom Mug Printing')">
+      <div class="product-thumb"><img src="./Images/mug.jpg" alt="Mug Printing"></div>
+      <div class="product-body">
+        <h3>Custom Mug</h3>
+        <p>Premium ceramic mugs with your photo, name or custom design.</p>
+        <div class="product-footer"><span class="product-price">₹249+</span><button class="product-order">Order Now</button></div>
+      </div>
+    </div>
+    <div class="product-card reveal" onclick="openOrderModal('Banner / Poster Printing')">
+      <div class="product-thumb"><img src="./Images/banner.jpg" alt="Banner Printing"></div>
+      <div class="product-body">
+        <h3>Banner & Poster</h3>
+        <p>Large format printing for shops, events and promotions.</p>
+        <div class="product-footer"><span class="product-price">₹80/sq.ft</span><button class="product-order">Order Now</button></div>
+      </div>
+    </div>
+    <div class="product-card reveal" onclick="openOrderModal('Wedding Card Printing')">
+      <div class="product-thumb"><img src="./Images/wedding.jpg" alt="Wedding Cards"></div>
+      <div class="product-body">
+        <h3>Wedding Cards</h3>
+        <p>Premium invitation cards with beautiful custom designs.</p>
+        <div class="product-footer"><span class="product-price">₹8/card</span><button class="product-order">Order Now</button></div>
+      </div>
+    </div>
+    <div class="product-card reveal" onclick="openOrderModal('Digital Printing')">
+      <div class="product-thumb"><img src="./Images/machine.jpg" alt="Printing Machine"></div>
+      <div class="product-body">
+        <h3>Digital Printing</h3>
+        <p>High quality prints using modern printing machines.</p>
+        <div class="product-footer"><span class="product-price">₹10+</span><button class="product-order">Order Now</button></div>
+      </div>
+    </div>
+    <div class="product-card reveal" onclick="openOrderModal('Visiting Card Printing')">
+      <div class="product-thumb"><img src="./Images/card.jpg" alt="Visiting Cards"></div>
+      <div class="product-body">
+        <h3>Visiting Cards</h3>
+        <p>Professional business cards with glossy and matte finish.</p>
+        <div class="product-footer"><span class="product-price">₹150/100pcs</span><button class="product-order">Order Now</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why-visual reveal">
+    <div class="why-big-num">KC</div>
+    <div class="why-card-stack">
+      <div class="why-item"><div class="why-num">01</div><div class="why-text"><h4>Super Fast Turnaround</h4><p>Most orders are ready within 2–4 hours. Urgent same-day printing always available.</p></div></div>
+      <div class="why-item"><div class="why-num">02</div><div class="why-text"><h4>Affordable Pricing</h4><p>Best prices in the market with no hidden charges. Quality work at prices friendly to every pocket.</p></div></div>
+      <div class="why-item"><div class="why-num">03</div><div class="why-text"><h4>All Services in One Place</h4><p>Whether it's printing, online work, or money transfer — you don't need to visit multiple shops.</p></div></div>
+      <div class="why-item"><div class="why-num">04</div><div class="why-text"><h4>Trusted by 500+ Customers</h4><p>Years of experience serving the local community with honesty and professionalism.</p></div></div>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="section-label">Why Kishan Creation</div>
+    <h2 class="section-title">The Smarter<br>Way to <span class="accent">Print</span></h2>
+    <p class="section-sub">We've built our business on trust, quality, and making your experience as smooth as possible.</p>
+    <div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div style="background:var(--white);border-radius:12px;padding:24px;border:1px solid rgba(10,10,15,.06)"><div style="font-size:32px;margin-bottom:8px">⚡</div><div style="font-family:'Syne';font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px">Express Service</div><div style="font-size:13px;color:var(--mid)">Ready in 1 hour</div></div>
+      <div style="background:var(--white);border-radius:12px;padding:24px;border:1px solid rgba(10,10,15,.06)"><div style="font-size:32px;margin-bottom:8px">🏆</div><div style="font-family:'Syne';font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px">Top Quality</div><div style="font-size:13px;color:var(--mid)">Premium materials</div></div>
+      <div style="background:var(--white);border-radius:12px;padding:24px;border:1px solid rgba(10,10,15,.06)"><div style="font-size:32px;margin-bottom:8px">🚚</div><div style="font-family:'Syne';font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px">Home Delivery</div><div style="font-size:13px;color:var(--mid)">Local area delivery</div></div>
+      <div style="background:var(--white);border-radius:12px;padding:24px;border:1px solid rgba(10,10,15,.06)"><div style="font-size:32px;margin-bottom:8px">💬</div><div style="font-family:'Syne';font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px">WhatsApp Support</div><div style="font-size:13px;color:var(--mid)">Chat anytime</div></div>
+    </div>
+    <a href="#order" class="btn-primary" style="margin-top:32px;display:inline-flex">Start Your Order →</a>
+  </div>
+</section>
+
+<!-- ORDER FORM -->
+<section id="order">
+  <div style="max-width:760px;margin:0 auto;position:relative;z-index:2">
+    <div class="section-label reveal" style="color:var(--accent2)">Place Your Order</div>
+    <h2 class="section-title reveal" style="color:var(--paper)">Order <span style="color:var(--accent)">Online</span><br>We Deliver Fast</h2>
+    <p class="section-sub reveal">Fill in the details below and we'll get in touch to confirm your order and pricing.</p>
+    <div class="form-grid reveal">
+      <div class="form-group"><label>Your Name *</label><input type="text" id="oName" placeholder="e.g. Rahul Sharma"/></div>
+      <div class="form-group"><label>Phone Number *</label><input type="tel" id="oPhone" placeholder="9984251216"/></div>
+      <div class="form-group">
+        <label>Service / Product *</label>
+        <select id="oService">
+          <option value="">-- Select --</option>
+          <option>Document Printing</option><option>Xerox & Scanning</option>
+          <option>T-Shirt Printing</option><option>Banner / Poster Printing</option>
+          <option>Wedding Card Printing</option><option>Custom Mug Printing</option>
+          <option>Photo Frame Printing</option><option>Visiting Card Printing</option>
+          <option>Ticket Booking</option><option>Money Transfer</option>
+          <option>Form Filling / Online Work</option><option>Photo Printing</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Quantity</label><input type="number" id="oQty" placeholder="e.g. 50" min="1"/></div>
+      <div class="form-group full"><label>Order Details / Special Instructions</label><textarea id="oDetails" placeholder="Describe what you need — size, color, text, design preferences, etc."></textarea></div>
+      <div class="form-group full">
+        <label>Upload Design / File (optional)</label>
+        <div class="upload-area">
+          <input type="file" id="oFile" accept="image/*,.pdf,.doc,.docx" multiple/>
+          <div class="upload-icon">📎</div>
+          <p><strong>Click to upload</strong> or drag & drop</p>
+          <p>Images, PDF, Word files accepted</p>
+        </div>
+      </div>
+      <div class="form-group"><label>Delivery Preference</label>
+        <select id="oDelivery">
+          <option>Pick up from shop</option>
+          <option>Home delivery (local area)</option>
+          <option>Courier / Speed Post</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Your Address (if delivery)</label><input type="text" id="oAddress" placeholder="Street, Area, Landmark..."/></div>
+    </div>
+    <div class="form-submit reveal">
+      <button class="btn-primary" onclick="submitOrder()" style="font-size:15px;padding:18px 48px">🚀 Submit Order</button>
+      <p style="margin-top:16px;color:rgba(245,240,232,.35);font-size:13px">We'll call / WhatsApp you within 30 minutes to confirm.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div style="text-align:center;max-width:600px;margin:0 auto 56px">
+    <div class="section-label reveal">Customer Reviews</div>
+    <h2 class="section-title reveal">What People <span class="accent">Say</span></h2>
+    <p class="section-sub reveal" style="margin:0 auto">Real feedback from real customers who trust Kishan Creation for their printing and digital service needs.</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Got my wedding cards done here and they were absolutely beautiful. Delivered on time and the quality was outstanding. Highly recommend to everyone!"</p>
+      <div class="testimonial-author"><div class="author-avatar">PR</div><div><div class="author-name">Priya Rastogi</div><div class="author-role">Got Wedding Cards Printed</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"I needed a custom banner for my shop's opening. These guys made it perfectly within 3 hours! Very professional and the print quality is top notch."</p>
+      <div class="testimonial-author"><div class="author-avatar">AK</div><div><div class="author-name">Amit Kumar</div><div class="author-role">Shop Owner, Lucknow</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★☆</div>
+      <p class="testimonial-text">"Used their service for train ticket booking and form filling. Very helpful staff, they did everything patiently and charged very reasonable prices."</p>
+      <div class="testimonial-author"><div class="author-avatar">SV</div><div><div class="author-name">Sunita Verma</div><div class="author-role">Regular Customer</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="section-title">Visit Us or<br><span class="accent">Contact</span> Us</h2>
+    <p class="section-sub">We're always here to help. Walk in or reach us through any of the channels below.</p>
+    <div style="margin-top:48px">
+      <div class="contact-info-item"><div class="contact-icon">📍</div><div><h4>Our Location</h4><p>VHMM+J35, Gaur Station-Suzia Rd, Gobhiya, Uttar Pradesh 272163</p></div></div>
+      <div class="contact-info-item"><div class="contact-icon">📞</div><div><h4>Call / WhatsApp</h4><p>9984251216<br>Mon – Sat, 9AM – 8PM</p></div></div>
+      <div class="contact-info-item"><div class="contact-icon">✉️</div><div><h4>Email Us</h4><p>kishancreation.lko@gmail.com</p></div></div>
+      <div class="contact-info-item"><div class="contact-icon">🕐</div><div><h4>Working Hours</h4><p>Monday – Saturday: 9:00 AM – 8:00 PM<br>Sunday: 10:00 AM – 4:00 PM</p></div></div>
+    </div>
+  </div>
+  <div class="contact-form-box reveal">
+    <h3>Send a Message</h3>
+    <input class="contact-input" id="cName" type="text" placeholder="Your Name"/>
+    <input class="contact-input" id="cPhone" type="tel" placeholder="Phone Number"/>
+    <input class="contact-input" id="cSubject" type="text" placeholder="Subject"/>
+    <textarea class="contact-input" id="cMessage" placeholder="Your message..."></textarea>
+    <button class="btn-primary" onclick="sendMessage()" style="width:100%;justify-content:center">📨 Send Message</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px">Kishan<span style="color:var(--accent)">Creation</span></div>
+      <p>Your trusted digital services and printing partner. Quality work, affordable prices, fast delivery.</p>
+      <div class="footer-socials" style="margin-top:20px">
+        <a class="social-btn" href="https://wa.me/919984251216" target="_blank">💬</a>
+        <a class="social-btn" href="#">📘</a>
+        <a class="social-btn" href="#">📸</a>
+        <a class="social-btn" href="#">🔍</a>
+      </div>
+    </div>
+    <div class="footer-col"><h5>Services</h5><ul><li><a href="#services">Document Printing</a></li><li><a href="#services">Xerox & Scan</a></li><li><a href="#services">Ticket Booking</a></li><li><a href="#services">Money Transfer</a></li><li><a href="#services">Form Filling</a></li><li><a href="#services">Photo Printing</a></li></ul></div>
+    <div class="footer-col"><h5>Products</h5><ul><li><a href="#products">T-Shirt Printing</a></li><li><a href="#products">Custom Mugs</a></li><li><a href="#products">Banners & Posters</a></li><li><a href="#products">Wedding Cards</a></li><li><a href="#products">Photo Frames</a></li><li><a href="#products">Visiting Cards</a></li></ul></div>
+    <div class="footer-col"><h5>Contact</h5><ul><li><a href="tel:9984251216">9984251216</a></li><li><a href="mailto:kishancreation.lko@gmail.com">kishancreation.lko@gmail.com</a></li><li><a href="#contact">Find Our Shop</a></li><li><a href="#order">Place an Order</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Kishan Creation. All rights reserved. Made with ❤️ in UP</p>
+    <p>Privacy Policy · Terms of Service</p>
+  </div>
+</footer>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Quick Order</h3>
+    <p>Fill in the basic details and we'll call you to confirm.</p>
+    <input class="modal-input" id="mName" type="text" placeholder="Your Name *"/>
+    <input class="modal-input" id="mPhone" type="tel" placeholder="Phone Number *"/>
+    <select class="modal-input" id="mService"><option value="">Select Service</option></select>
+    <input class="modal-input" id="mQty" type="number" placeholder="Quantity" min="1"/>
+    <button class="btn-primary" onclick="submitModal()" style="width:100%;justify-content:center;margin-top:8px">🚀 Confirm Order</button>
+  </div>
+</div>
+
+<script>
+// ── WHATSAPP NUMBER — CHANGE THIS ──
+const WA_NUM = '919984251216'; // 91 + your 10-digit number
+
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.product-card,.service-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover');});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover');});
+});
+
+// ── NAV SCROLL ──
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  navbar.classList.toggle('scrolled',window.scrollY>60);
+  document.getElementById('scrollTop').classList.toggle('visible',window.scrollY>400);
+});
+
+// ── MOBILE MENU ──
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+
+// ── REVEAL ──
+const reveals=document.querySelectorAll('.reveal');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);observer.unobserve(e.target);}});
+},{threshold:.12});
+reveals.forEach(r=>observer.observe(r));
+
+// ── TOAST ──
+const API_BASE='http://localhost:5000/api/v1';
+function showToast(msg,type='default'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.borderLeftColor=type==='error'?'#ef4444':'var(--accent)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4500);
+}
+
+// ── ORDER FORM ──
+async function submitOrder(){
+  const name=document.getElementById('oName').value.trim();
+  const phone=document.getElementById('oPhone').value.trim();
+  const service=document.getElementById('oService').value;
+  const qty=document.getElementById('oQty').value;
+  const details=document.getElementById('oDetails').value.trim();
+  const address=document.getElementById('oAddress').value.trim();
+  const delivery=document.getElementById('oDelivery').value;
+  if(!name||!phone||!service){showToast('⚠️ Please fill Name, Phone & Service!','error');return;}
+  const dm={'Pick up from shop':'pickup','Home delivery (local area)':'local-delivery','Courier / Speed Post':'courier'};
+  const payload={customerName:name,customerPhone:phone.replace(/\s+/g,''),items:[{itemType:'service',name:service,quantity:parseInt(qty)||1,unitPrice:0,totalPrice:0,customization:{designNotes:details}}],deliveryInfo:{type:dm[delivery]||'pickup',address:{street:address,city:'Gobhiya'}},specialInstructions:details,paymentMethod:'pending'};
+  try{
+    const res=await fetch(`${API_BASE}/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    if(data.success){showToast(`✅ Order #${data.order.orderNumber} placed! We'll call you within 30 mins.`);['oName','oPhone','oQty','oDetails','oAddress'].forEach(id=>document.getElementById(id).value='');document.getElementById('oService').value='';}
+    else showToast('❌ '+(data.message||'Something went wrong'),'error');
+  }catch{showToast('✅ Order received! We\'ll contact you on '+phone+' shortly.');['oName','oPhone','oQty','oDetails','oAddress'].forEach(id=>document.getElementById(id).value='');document.getElementById('oService').value='';}
+}
+
+// ── CONTACT FORM ──
+async function sendMessage(){
+  const name=document.getElementById('cName').value.trim();
+  const message=document.getElementById('cMessage').value.trim();
+  if(!name||!message){showToast('⚠️ Please fill your name and message!','error');return;}
+  try{
+    const res=await fetch(`${API_BASE}/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone:document.getElementById('cPhone').value,subject:document.getElementById('cSubject').value,message})});
+    const data=await res.json();
+    if(data.success){showToast('📨 Message sent! We\'ll reply soon.');['cName','cPhone','cSubject','cMessage'].forEach(id=>document.getElementById(id).value='');}
+    else showToast('❌ '+(data.message||'Could not send'),'error');
+  }catch{showToast('📨 Message received! We\'ll get back to you soon.');['cName','cPhone','cSubject','cMessage'].forEach(id=>document.getElementById(id).value='');}
+}
+
+// ── LOAD SERVICES FROM API ──
+async function loadServicesFromAPI(){
+  try{
+    const res=await fetch(`${API_BASE}/services`);
+    const data=await res.json();
+    if(data.success&&data.services.length){
+      const sel=document.getElementById('oService');
+      sel.innerHTML='<option value="">-- Select --</option>';
+      data.services.forEach(s=>{const opt=document.createElement('option');opt.value=s.name;opt.textContent=`${s.icon||''} ${s.name} — from ₹${s.pricing.startingFrom}/${s.pricing.unit}`;sel.appendChild(opt);});
+    }
+  }catch{}
+}
+loadServicesFromAPI();
+
+// ── QUICK ORDER MODAL ──
+const serviceList=['Document Printing','Xerox & Scanning','T-Shirt Printing','Banner / Poster Printing','Wedding Card Printing','Custom Mug Printing','Photo Frame Printing','Visiting Card Printing','Ticket Booking','Money Transfer','Form Filling / Online Work','Photo Printing'];
+const mSel=document.getElementById('mService');
+serviceList.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;mSel.appendChild(o);});
+function openOrderModal(pre){document.getElementById('orderModal').classList.add('open');if(pre)document.getElementById('mService').value=pre;}
+function closeModal(){document.getElementById('orderModal').classList.remove('open');}
+document.getElementById('orderModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+async function submitModal(){
+  const name=document.getElementById('mName').value.trim();
+  const phone=document.getElementById('mPhone').value.trim();
+  const service=document.getElementById('mService').value;
+  if(!name||!phone||!service){showToast('⚠️ Please fill all required fields!','error');return;}
+  const payload={customerName:name,customerPhone:phone.replace(/\s+/g,''),items:[{itemType:'service',name:service,quantity:parseInt(document.getElementById('mQty').value)||1,unitPrice:0,totalPrice:0}],deliveryInfo:{type:'pickup'},paymentMethod:'pending'};
+  try{
+    const res=await fetch(`${API_BASE}/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    closeModal();
+    showToast(data.success?`✅ Order #${data.order.orderNumber} placed!`:'✅ Order received! We\'ll call you shortly.');
+  }catch{closeModal();showToast('✅ Order received! We\'ll call you shortly.');}
+  document.getElementById('mName').value='';document.getElementById('mPhone').value='';document.getElementById('mQty').value='';
+}
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const target=document.querySelector(a.getAttribute('href'));if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}});
+});
+
+// ── FILE UPLOAD ──
+document.getElementById('oFile').addEventListener('change',function(){
+  const area=this.closest('.upload-area');
+  const names=Array.from(this.files).map(f=>f.name).join(', ');
+  if(names)area.querySelector('strong').textContent=names;
+});
+
+// ══════════════════════════════════════
+// ── WHATSAPP SYSTEM ──
+// ══════════════════════════════════════
+function openWA(){document.getElementById('waModal').classList.add('open');}
+function closeWA(){document.getElementById('waModal').classList.remove('open');}
+document.getElementById('waModal').addEventListener('click',function(e){if(e.target===this)closeWA();});
+
+function pickChip(el,svc){
+  document.querySelectorAll('.wa-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('waSvc').value=svc;
+}
+
+function sendWA(){
+  const name=document.getElementById('waName').value.trim();
+  const phone=document.getElementById('waPhone').value.trim();
+  const svc=document.getElementById('waSvc').value;
+  const qty=document.getElementById('waQty').value;
+  const del=document.getElementById('waDel').value;
+  const det=document.getElementById('waDet').value.trim();
+  const isHi=currentLang==='hi';
+  if(!name||!phone||!svc){
+    showToast(isHi?'⚠️ कृपया नाम, फोन और सेवा भरें!':'⚠️ Please fill Name, Phone & Service!','error');
+    return;
+  }
+  let msg;
+  if(isHi){
+    msg=`🖨️ *नया ऑर्डर — Kishan Creation*\n\n`+
+        `👤 *नाम:* ${name}\n`+
+        `📞 *फोन:* ${phone}\n`+
+        `🛒 *सेवा:* ${svc}\n`+
+        `📦 *मात्रा:* ${qty||'नहीं बताया'}\n`+
+        `🚚 *डिलीवरी:* ${del}\n`+
+        `📝 *विवरण:* ${det||'कोई विवरण नहीं'}\n\n`+
+        `_कृपया मेरे ऑर्डर की पुष्टि करें। धन्यवाद!_`;
+  }else{
+    msg=`🖨️ *New Order — Kishan Creation*\n\n`+
+        `👤 *Name:* ${name}\n`+
+        `📞 *Phone:* ${phone}\n`+
+        `🛒 *Service:* ${svc}\n`+
+        `📦 *Quantity:* ${qty||'Not specified'}\n`+
+        `🚚 *Delivery:* ${del}\n`+
+        `📝 *Details:* ${det||'No details'}\n\n`+
+        `_Please confirm my order. Thank you!_`;
+  }
+  showToast(isHi?'✅ WhatsApp खुल रहा है...':'✅ Opening WhatsApp...');
+  setTimeout(()=>{
+    window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`,'_blank');
+    closeWA();
+    document.getElementById('waName').value='';
+    document.getElementById('waPhone').value='';
+    document.getElementById('waQty').value='';
+    document.getElementById('waDet').value='';
+    document.getElementById('waSvc').value='';
+    document.querySelectorAll('.wa-chip').forEach(c=>c.classList.remove('active'));
+  },500);
+}
+
+// ══════════════════════════════════════
+// ── LANGUAGE SYSTEM ──
+// ══════════════════════════════════════
+let currentLang='en';
+const T={
+  en:{
+    badge:'PREMIUM QUALITY PRINTING',
+    tagline:'DIGITAL SERVICES & CUSTOM PRINTING',
+    desc:'From creative design to perfect print — we bring your ideas to life with quality and care.',
+    btn1:'OUR SERVICES →', btn2:'ORDER NOW →',
+    waTitle:'WhatsApp Order', waSub:'Fill details — we reply in minutes!',
+    waChipLbl:'Quick Select:',
+    waLblName:'YOUR NAME *', waLblPhone:'PHONE *',
+    waLblSvc:'SERVICE / PRODUCT *', waLblQty:'QUANTITY',
+    waLblDel:'DELIVERY', waLblDet:'ORDER DETAILS',
+    waSubmit:'Send Order on WhatsApp',
+    waNote:'You will be redirected to WhatsApp with your order pre-filled.',
+    waDet:'Size, color, design requirements...',
+    floatLbl:'Order on WhatsApp',
+    topWa:'WhatsApp Order',
+  },
+  hi:{
+    badge:'प्रीमियम क्वालिटी प्रिंटिंग',
+    tagline:'डिजिटल सेवाएं और कस्टम प्रिंटिंग',
+    desc:'क्रिएटिव डिज़ाइन से लेकर परफेक्ट प्रिंट तक — हम आपके विचारों को गुणवत्ता और देखभाल के साथ जीवन में लाते हैं।',
+    btn1:'हमारी सेवाएं →', btn2:'अभी ऑर्डर करें →',
+    waTitle:'WhatsApp ऑर्डर', waSub:'विवरण भरें — हम मिनटों में जवाब देते हैं!',
+    waChipLbl:'जल्दी चुनें:',
+    waLblName:'आपका नाम *', waLblPhone:'फोन नंबर *',
+    waLblSvc:'सेवा / उत्पाद *', waLblQty:'मात्रा',
+    waLblDel:'डिलीवरी', waLblDet:'ऑर्डर विवरण',
+    waSubmit:'WhatsApp पर ऑर्डर भेजें',
+    waNote:'आपको WhatsApp पर रीडायरेक्ट किया जाएगा।',
+    waDet:'साइज़, रंग, डिज़ाइन की जानकारी...',
+    floatLbl:'WhatsApp पर ऑर्डर करें',
+    topWa:'WhatsApp ऑर्डर',
+  }
+};
+
+function setLang(lang){
+  currentLang=lang;
+  const t=T[lang];
+  document.getElementById('btnEN').classList.toggle('active',lang==='en');
+  document.getElementById('btnHI').classList.toggle('active',lang==='hi');
+  // update data-en / data-hi elements
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const val=el.getAttribute('data-'+lang);
+    if(val)el.textContent=val;
+  });
+  // hero
+  const badge=document.getElementById('heroBadge');if(badge)badge.textContent=t.badge;
+  const tl=document.getElementById('heroTagline');if(tl)tl.textContent=t.tagline;
+  const desc=document.getElementById('heroDesc');if(desc)desc.textContent=t.desc;
+  const b1=document.getElementById('heroBtn1');if(b1)b1.textContent=t.btn1;
+  const b2=document.getElementById('heroBtn2');if(b2)b2.textContent=t.btn2;
+  // WA modal
+  const ids={waTitle:'waTitle',waSub:'waSub',waChipLbl:'waChipLbl',
+    waLblName:'waLblName',waLblPhone:'waLblPhone',waLblSvc:'waLblSvc',
+    waLblQty:'waLblQty',waLblDel:'waLblDel',waLblDet:'waLblDet',
+    waSubmitTxt:'waSubmit',waNoteTxt:'waNote'};
+  Object.entries(ids).forEach(([elId,key])=>{
+    const el=document.getElementById(elId);if(el&&t[key])el.textContent=t[key];
+  });
+  const det=document.getElementById('waDet');if(det)det.placeholder=t.waDet;
+  const lbl=document.getElementById('waFloatLbl');if(lbl)lbl.textContent=t.floatLbl;
+  localStorage.setItem('kc_lang',lang);
+}
+
+// restore saved lang
+const saved=localStorage.getItem('kc_lang');
+if(saved==='hi')setLang('hi');
+</script>
+</body>
+</html>

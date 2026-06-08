@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PrintZone — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:#0a0a0f; --paper:#f5f0e8; --accent:#ff3d00; --accent2:#ffd600;
+  --steel:#1c1c2e; --mid:#6b6b80; --light:#e8e3d8; --white:#fff;
+  --green:#22c55e; --yellow:#f59e0b; --blue:#3b82f6; --red:#ef4444;
+  --sidebar-w:260px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f0ebe0;color:var(--ink);display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;background:var(--steel);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
+  z-index:100;transition:transform .3s;
+}
+.sidebar-logo{
+  padding:28px 24px 20px;
+  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--paper);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.sidebar-logo span{color:var(--accent);}
+.sidebar-nav{flex:1;padding:20px 0;overflow-y:auto;}
+.nav-section{
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);
+  padding:16px 24px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 24px;color:rgba(255,255,255,.6);
+  cursor:pointer;transition:.2s;border-left:3px solid transparent;
+  font-size:14px;font-weight:500;
+}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--paper);}
+.nav-item.active{background:rgba(255,61,0,.12);color:var(--paper);border-left-color:var(--accent);}
+.nav-item .icon{font-size:18px;width:22px;text-align:center;}
+.nav-badge{
+  margin-left:auto;background:var(--accent);color:#fff;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;
+}
+.sidebar-user{
+  padding:20px 24px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:12px;
+}
+.user-avatar{
+  width:40px;height:40px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;flex-shrink:0;
+}
+.user-info .name{font-size:14px;font-weight:600;color:var(--paper);}
+.user-info .role{font-size:11px;color:rgba(255,255,255,.4);}
+.logout-btn{
+  margin-left:auto;background:none;border:none;color:rgba(255,255,255,.4);
+  cursor:pointer;font-size:18px;transition:.2s;
+}
+.logout-btn:hover{color:var(--accent);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{
+  background:var(--white);padding:16px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(10,10,15,.08);
+  position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--ink);}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-search{
+  background:var(--paper);border:1px solid rgba(10,10,15,.1);
+  border-radius:8px;padding:8px 16px;font-size:14px;outline:none;
+  font-family:'DM Sans',sans-serif;width:240px;color:var(--ink);
+}
+.topbar-search:focus{border-color:var(--accent);}
+.notif-btn{
+  width:40px;height:40px;border-radius:8px;background:var(--paper);
+  border:1px solid rgba(10,10,15,.08);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:18px;position:relative;
+}
+.notif-dot{
+  width:8px;height:8px;background:var(--accent);border-radius:50%;
+  position:absolute;top:8px;right:8px;
+}
+
+.content{padding:32px;flex:1;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px;}
+.stat-card{
+  background:var(--white);border-radius:16px;padding:24px;
+  border:1px solid rgba(10,10,15,.06);
+  display:flex;align-items:center;gap:16px;
+  transition:.3s;cursor:default;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.08);}
+.stat-icon{
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;
+}
+.stat-icon.orange{background:rgba(255,61,0,.1);}
+.stat-icon.green{background:rgba(34,197,94,.1);}
+.stat-icon.blue{background:rgba(59,130,246,.1);}
+.stat-icon.yellow{background:rgba(245,158,11,.1);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;color:var(--ink);}
+.stat-label{font-size:12px;color:var(--mid);margin-top:2px;}
+.stat-change{font-size:12px;margin-top:6px;}
+.stat-change.up{color:var(--green);}
+.stat-change.down{color:var(--red);}
+
+/* TABLES */
+.section-card{
+  background:var(--white);border-radius:16px;
+  border:1px solid rgba(10,10,15,.06);
+  overflow:hidden;margin-bottom:24px;
+}
+.section-head{
+  padding:20px 24px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid rgba(10,10,15,.06);
+}
+.section-head h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{
+  padding:12px 16px;text-align:left;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);
+  background:var(--paper);border-bottom:1px solid rgba(10,10,15,.06);
+}
+tbody td{
+  padding:14px 16px;font-size:14px;
+  border-bottom:1px solid rgba(10,10,15,.04);
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:rgba(10,10,15,.02);}
+
+/* BADGES */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:100px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+}
+.badge-pending    {background:rgba(245,158,11,.1); color:#d97706;}
+.badge-confirmed  {background:rgba(59,130,246,.1); color:#2563eb;}
+.badge-processing {background:rgba(139,92,246,.1); color:#7c3aed;}
+.badge-ready      {background:rgba(34,197,94,.1);  color:#16a34a;}
+.badge-dispatched {background:rgba(6,182,212,.1);  color:#0e7490;}
+.badge-delivered  {background:rgba(34,197,94,.15); color:#15803d;}
+.badge-cancelled  {background:rgba(239,68,68,.1);  color:#dc2626;}
+.badge-paid       {background:rgba(34,197,94,.1);  color:#16a34a;}
+.badge-unpaid     {background:rgba(239,68,68,.1);  color:#dc2626;}
+.badge-urgent     {background:rgba(255,61,0,.1);   color:var(--accent);}
+
+/* BUTTONS */
+.btn{
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.5px;border:none;border-radius:6px;cursor:pointer;
+  padding:8px 16px;transition:.2s;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-sm{padding:6px 12px;font-size:11px;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#e03500;}
+.btn-secondary{background:var(--paper);color:var(--ink);border:1px solid rgba(10,10,15,.1);}
+.btn-secondary:hover{background:var(--light);}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--red);}
+.btn-danger:hover{background:rgba(239,68,68,.2);}
+.btn-success{background:rgba(34,197,94,.1);color:var(--green);}
+.btn-success:hover{background:rgba(34,197,94,.2);}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-row.one{grid-template-columns:1fr;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mid);}
+.form-input{
+  background:var(--paper);border:1px solid rgba(10,10,15,.1);
+  border-radius:6px;padding:10px 14px;font-family:'DM Sans',sans-serif;
+  font-size:14px;color:var(--ink);outline:none;transition:.2s;
+}
+.form-input:focus{border-color:var(--accent);background:#fff;}
+.form-input::placeholder{color:var(--mid);}
+select.form-input option{background:#fff;}
+textarea.form-input{resize:vertical;min-height:80px;}
+
+/* MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(10,10,15,.7);backdrop-filter:blur(6px);
+  z-index:999;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:#fff;border-radius:20px;padding:36px;
+  max-width:520px;width:100%;position:relative;
+  animation:modalIn .35s cubic-bezier(.34,1.56,.64,1);
+  max-height:90vh;overflow-y:auto;
+}
+.modal h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin-bottom:20px;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--mid);}
+.modal-close:hover{color:var(--accent);}
+@keyframes modalIn{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:28px;right:28px;
+  background:var(--steel);color:var(--paper);
+  padding:14px 20px;border-radius:10px;
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:600;
+  z-index:9999;transform:translateY(100px);opacity:0;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  border-left:4px solid var(--accent);
+  max-width:340px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* LOADING */
+.skeleton{background:linear-gradient(90deg,#eee 25%,#f5f5f5 50%,#eee 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* CHARTS */
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px;}
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:16px;}
+.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.chart-bar{width:100%;background:var(--accent);border-radius:4px 4px 0 0;transition:.5s;min-height:4px;}
+.chart-bar-label{font-size:10px;color:var(--mid);text-align:center;}
+.chart-bar-val{font-size:10px;font-weight:700;color:var(--ink);}
+.donut-wrap{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+
+/* ORDER DETAIL */
+.order-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.detail-box{background:var(--paper);border-radius:10px;padding:16px;}
+.detail-box h5{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+.detail-box p{font-size:13px;color:var(--ink);margin-bottom:4px;}
+.timeline{padding:0;list-style:none;}
+.timeline li{display:flex;gap:12px;padding-bottom:16px;position:relative;}
+.timeline li::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:2px;background:rgba(10,10,15,.08);}
+.timeline li:last-child::before{display:none;}
+.tl-dot{width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;flex-shrink:0;}
+.tl-text .tl-status{font-weight:700;font-size:13px;text-transform:capitalize;}
+.tl-text .tl-time{font-size:11px;color:var(--mid);}
+.tl-text .tl-note{font-size:12px;color:var(--mid);margin-top:2px;}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px;color:var(--mid);}
+.empty .empty-icon{font-size:48px;margin-bottom:12px;}
+.empty p{font-size:15px;}
+
+/* LOGIN SCREEN */
+.login-screen{
+  display:none;position:fixed;inset:0;
+  background:var(--steel);z-index:9000;
+  align-items:center;justify-content:center;
+}
+.login-screen.show{display:flex;}
+.login-card{
+  background:var(--paper);border-radius:20px;padding:48px;
+  width:100%;max-width:420px;
+  animation:modalIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+.login-card h2{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;margin-bottom:4px;}
+.login-card p{color:var(--mid);font-size:14px;margin-bottom:28px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .chart-row{grid-template-columns:1fr;}
+  .order-detail-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen show" id="loginScreen">
+  <div class="login-card">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:20px;">
+      Print<span style="color:var(--accent)">Zone</span>
+    </div>
+    <h2>Admin Login</h2>
+    <p>Sign in to manage your shop</p>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="loginEmail" type="email" placeholder="admin@printzone.com"/>
+    </div>
+    <div class="form-group" style="margin-bottom:24px;">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="loginPassword" type="password" placeholder="••••••••"/>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;" onclick="doLogin()">
+      🔐 Sign In
+    </button>
+    <p id="loginError" style="color:var(--red);font-size:13px;margin-top:12px;display:none;"></p>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">Print<span>Zone</span> <span style="font-size:13px;color:rgba(255,255,255,.3);font-family:'DM Sans',sans-serif;font-weight:400;">Admin</span></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">📊</span> Dashboard</div>
+    <div class="nav-item" onclick="showPage('orders',this)"><span class="icon">📦</span> Orders <span class="nav-badge" id="pendingBadge">0</span></div>
+    <div class="nav-section">Catalog</div>
+    <div class="nav-item" onclick="showPage('products',this)"><span class="icon">🛍️</span> Products</div>
+    <div class="nav-item" onclick="showPage('services',this)"><span class="icon">⚙️</span> Services</div>
+    <div class="nav-section">People</div>
+    <div class="nav-item" onclick="showPage('customers',this)"><span class="icon">👥</span> Customers</div>
+    <div class="nav-item" onclick="showPage('messages',this)"><span class="icon">✉️</span> Messages <span class="nav-badge" id="msgBadge" style="display:none">!</span></div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="adminAvatar">A</div>
+    <div class="user-info">
+      <div class="name" id="adminName">Admin</div>
+      <div class="role">Administrator</div>
+    </div>
+    <button class="logout-btn" title="Logout" onclick="doLogout()">⏻</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <button style="display:none;background:none;border:none;font-size:22px;cursor:pointer;" id="menuToggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <input class="topbar-search" placeholder="Search orders by phone..." id="globalSearch" onkeydown="if(event.key==='Enter')searchOrders()"/>
+      <div class="notif-btn">🔔<span class="notif-dot"></span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD PAGE ── -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card"><div class="stat-icon orange">📦</div><div><div class="stat-num" id="s-totalOrders">—</div><div class="stat-label">Total Orders</div><div class="stat-change up" id="s-todayOrders">Today: —</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">💰</div><div><div class="stat-num" id="s-revenue">—</div><div class="stat-label">Total Revenue</div><div class="stat-change up" id="s-monthRevenue">This month: —</div></div></div>
+        <div class="stat-card"><div class="stat-icon yellow">⏳</div><div><div class="stat-num" id="s-pending">—</div><div class="stat-label">Pending Orders</div><div class="stat-change" style="color:var(--yellow)">Needs attention</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue">👥</div><div><div class="stat-num" id="s-customers">—</div><div class="stat-label">Customers</div><div class="stat-change up">Registered</div></div></div>
+      </div>
+
+      <div class="chart-row">
+        <div class="section-card">
+          <div class="section-head"><h3>Revenue — Last 7 Days</h3></div>
+          <div style="padding:20px 24px;"><div class="chart-bar-wrap" id="revenueChart"></div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-head"><h3>Orders by Status</h3></div>
+          <div style="padding:20px;"><div id="statusChart"></div></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-head">
+          <h3>Recent Orders</h3>
+          <button class="btn btn-secondary btn-sm" onclick="showPage('orders',null)">View All →</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Date</th><th>Action</th></tr></thead>
+          <tbody id="recentOrdersTbody"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--mid);">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── ORDERS PAGE ── -->
+    <div class="page" id="page-orders">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+        <select class="form-input" id="orderStatusFilter" style="width:160px;" onchange="loadOrders()">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="processing">Processing</option>
+          <option value="ready">Ready</option>
+          <option value="dispatched">Dispatched</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <input class="form-input" id="orderSearch" placeholder="Search by order# or customer..." style="width:260px;" oninput="loadOrders()"/>
+        <button class="btn btn-primary btn-sm" onclick="loadOrders()">🔍 Search</button>
+      </div>
+      <div class="section-card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order #</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Payment</th><th>Urgent</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="ordersTbody"><tr><td colspan="9" style="text-align:center;padding:32px;color:var(--mid);">Loading...</td></tr></tbody>
+        </table></div>
+        <div style="padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(10,10,15,.06);">
+          <div id="ordersPagination" style="font-size:13px;color:var(--mid);"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" id="prevPage" onclick="changePage(-1)">← Prev</button>
+            <button class="btn btn-secondary btn-sm" id="nextPage" onclick="changePage(1)">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRODUCTS PAGE ── -->
+    <div class="page" id="page-products">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div></div>
+        <button class="btn btn-primary" onclick="openProductModal()">＋ Add Product</button>
+      </div>
+      <div class="section-card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Orders</th><th>Actions</th></tr></thead>
+          <tbody id="productsTbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--mid);">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── SERVICES PAGE ── -->
+    <div class="page" id="page-services">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div></div>
+        <button class="btn btn-primary" onclick="openServiceModal()">＋ Add Service</button>
+      </div>
+      <div class="section-card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Service</th><th>Category</th><th>Starting Price</th><th>Est. Time</th><th>Available</th><th>Actions</th></tr></thead>
+          <tbody id="servicesTbody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--mid);">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── CUSTOMERS PAGE ── -->
+    <div class="page" id="page-customers">
+      <div class="section-card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="customersTbody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--mid);">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ── MESSAGES PAGE ── -->
+    <div class="page" id="page-messages">
+      <div class="section-card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Phone</th><th>Subject</th><th>Message</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="messagesTbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--mid);">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal" style="max-width:680px;">
+    <button class="modal-close" onclick="closeModal('orderModal')">✕</button>
+    <h3 id="orderModalTitle">Order Details</h3>
+    <div id="orderModalBody"></div>
+  </div>
+</div>
+
+<!-- STATUS UPDATE MODAL -->
+<div class="modal-overlay" id="statusModal">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="closeModal('statusModal')">✕</button>
+    <h3>Update Status</h3>
+    <input type="hidden" id="statusOrderId"/>
+    <div class="form-row one"><div class="form-group">
+      <label class="form-label">New Status</label>
+      <select class="form-input" id="newStatus">
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="processing">Processing</option>
+        <option value="ready">Ready for Pickup</option>
+        <option value="dispatched">Dispatched</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div></div>
+    <div class="form-row one"><div class="form-group">
+      <label class="form-label">Note (optional)</label>
+      <textarea class="form-input" id="statusNote" placeholder="e.g. Call customer before dispatch"></textarea>
+    </div></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitStatusUpdate()">Update Status</button>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+    <h3 id="productModalTitle">Add Product</h3>
+    <input type="hidden" id="productId"/>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Name *</label><input class="form-input" id="pName" placeholder="e.g. Custom T-Shirt"/></div>
+      <div class="form-group"><label class="form-label">Category *</label>
+        <select class="form-input" id="pCategory">
+          <option value="tshirt">T-Shirt</option><option value="mug">Mug</option>
+          <option value="banner">Banner</option><option value="poster">Poster</option>
+          <option value="wedding-card">Wedding Card</option><option value="visiting-card">Visiting Card</option>
+          <option value="photo-frame">Photo Frame</option><option value="calendar">Calendar</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Base Price (₹) *</label><input class="form-input" id="pPrice" type="number" placeholder="299"/></div>
+      <div class="form-group"><label class="form-label">Price Unit</label><input class="form-input" id="pUnit" placeholder="per piece"/></div>
+    </div>
+    <div class="form-row one"><div class="form-group"><label class="form-label">Description *</label><textarea class="form-input" id="pDesc" placeholder="Describe the product..."></textarea></div></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Min Quantity</label><input class="form-input" id="pMinQty" type="number" value="1"/></div>
+      <div class="form-group"><label class="form-label">Delivery Days</label><input class="form-input" id="pDays" type="number" value="2"/></div>
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:20px;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;"><input type="checkbox" id="pFeatured"/> Featured</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;"><input type="checkbox" id="pInStock" checked/> In Stock</label>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="saveProduct()">Save Product</button>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+    <h3 id="serviceModalTitle">Add Service</h3>
+    <input type="hidden" id="serviceId"/>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Name *</label><input class="form-input" id="sName" placeholder="e.g. Document Printing"/></div>
+      <div class="form-group"><label class="form-label">Icon (emoji)</label><input class="form-input" id="sIcon" placeholder="🖨️" maxlength="4"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Category *</label>
+        <select class="form-input" id="sCategory">
+          <option value="printing">Printing</option><option value="digital">Digital</option>
+          <option value="financial">Financial</option><option value="photography">Photography</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Starting Price (₹) *</label><input class="form-input" id="sPrice" type="number" placeholder="2"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Price Unit</label><input class="form-input" id="sPriceUnit" placeholder="per page"/></div>
+      <div class="form-group"><label class="form-label">Est. Time</label><input class="form-input" id="sTime" placeholder="30 mins"/></div>
+    </div>
+    <div class="form-row one"><div class="form-group"><label class="form-label">Description *</label><textarea class="form-input" id="sDesc"></textarea></div></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="saveService()">Save Service</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────
+const API = 'http://localhost:5000/api/v1';
+let token = localStorage.getItem('pz_token') || '';
+let currentUser = JSON.parse(localStorage.getItem('pz_user') || 'null');
+let orderPage = 1;
+let orderTotalPages = 1;
+
+// ── INIT ─────────────────────────────────────────
+window.onload = () => {
+  if (token && currentUser) {
+    hidLogin();
+    initDashboard();
+  }
+};
+
+// ── AUTH ─────────────────────────────────────────
+async function doLogin() {
+  const email    = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl    = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  if (!email || !password) { errEl.textContent = 'Please enter email and password.'; errEl.style.display = 'block'; return; }
+
+  try {
+    const res  = await apiFetch('/auth/login', 'POST', { email, password }, false);
+    if (!res.success) throw new Error(res.message);
+    if (res.user.role !== 'admin') throw new Error('Access denied. Admin only.');
+
+    token = res.token;
+    currentUser = res.user;
+    localStorage.setItem('pz_token', token);
+    localStorage.setItem('pz_user', JSON.stringify(currentUser));
+    hidLogin();
+    initDashboard();
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function hidLogin() {
+  document.getElementById('loginScreen').classList.remove('show');
+  document.getElementById('adminName').textContent = currentUser?.name || 'Admin';
+  document.getElementById('adminAvatar').textContent = (currentUser?.name || 'A')[0].toUpperCase();
+}
+
+function doLogout() {
+  token = ''; currentUser = null;
+  localStorage.removeItem('pz_token'); localStorage.removeItem('pz_user');
+  document.getElementById('loginScreen').classList.add('show');
+}
+
+// ── API HELPER ────────────────────────────────────
+async function apiFetch(path, method = 'GET', body = null, auth = true) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (auth && token) headers['Authorization'] = `Bearer ${token}`;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  return res.json();
+}
+
+// ── PAGE NAVIGATION ───────────────────────────────
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('pageTitle').textContent =
+    { dashboard:'Dashboard', orders:'Orders', products:'Products', services:'Services', customers:'Customers', messages:'Messages' }[name];
+  const loaders = { orders: loadOrders, products: loadProducts, services: loadServices, customers: loadCustomers, messages: loadMessages };
+  if (loaders[name]) loaders[name]();
+}
+
+// ── DASHBOARD ─────────────────────────────────────
+async function initDashboard() {
+  try {
+    const res = await apiFetch('/admin/dashboard');
+    if (!res.success) return;
+    const s = res.stats;
+    document.getElementById('s-totalOrders').textContent = s.orders.total;
+    document.getElementById('s-todayOrders').textContent = `Today: ${s.orders.today}`;
+    document.getElementById('s-revenue').textContent = '₹' + (s.revenue.total || 0).toLocaleString('en-IN');
+    document.getElementById('s-monthRevenue').textContent = 'Month: ₹' + (s.revenue.month || 0).toLocaleString('en-IN');
+    document.getElementById('s-pending').textContent = s.orders.pending;
+    document.getElementById('s-customers').textContent = s.customers;
+    document.getElementById('pendingBadge').textContent = s.orders.pending;
+
+    renderRevenueChart(s.revenueByDay || []);
+    renderStatusChart(s.ordersByStatus || []);
+    renderRecentOrders(res.recentOrders || []);
+  } catch(e) { console.error(e); }
+}
+
+function renderRevenueChart(data) {
+  const wrap = document.getElementById('revenueChart');
+  if (!data.length) { wrap.innerHTML = '<p style="color:var(--mid);font-size:13px;">No data yet</p>'; return; }
+  const max = Math.max(...data.map(d => d.total), 1);
+  wrap.innerHTML = data.map(d => {
+    const h = Math.round((d.total / max) * 100);
+    const day = new Date(d._id).toLocaleDateString('en-IN',{weekday:'short'});
+    return `<div class="chart-bar-col">
+      <div class="chart-bar-val">₹${(d.total/1000).toFixed(1)}k</div>
+      <div class="chart-bar" style="height:${h}%"></div>
+      <div class="chart-bar-label">${day}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderStatusChart(data) {
+  const wrap = document.getElementById('statusChart');
+  const colors = { pending:'#f59e0b', confirmed:'#3b82f6', processing:'#8b5cf6', ready:'#22c55e', dispatched:'#06b6d4', delivered:'#16a34a', cancelled:'#ef4444' };
+  wrap.innerHTML = data.map(d => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:${colors[d._id]||'#999'};flex-shrink:0;"></div>
+      <div style="flex:1;font-size:13px;text-transform:capitalize;">${d._id}</div>
+      <div style="font-weight:700;font-size:14px;">${d.count}</div>
+    </div>`).join('');
+}
+
+function renderRecentOrders(orders) {
+  const tb = document.getElementById('recentOrdersTbody');
+  if (!orders.length) { tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--mid);">No orders yet</td></tr>'; return; }
+  tb.innerHTML = orders.map(o => `
+    <tr>
+      <td><strong>${o.orderNumber}</strong>${o.isUrgent?'<span class="badge badge-urgent" style="margin-left:6px;">URGENT</span>':''}</td>
+      <td>${o.customer?.name||'—'}</td>
+      <td>${o.items?.length||0} item(s)</td>
+      <td><strong>₹${(o.pricing?.total||0).toLocaleString('en-IN')}</strong></td>
+      <td><span class="badge badge-${o.status}">${o.status}</span></td>
+      <td><span class="badge ${o.payment?.status==='paid'?'badge-paid':'badge-unpaid'}">${o.payment?.status||'pending'}</span></td>
+      <td>${formatDate(o.createdAt)}</td>
+      <td><button class="btn btn-secondary btn-sm" onclick="viewOrder('${o._id}')">View</button></td>
+    </tr>`).join('');
+}
+
+// ── ORDERS ────────────────────────────────────────
+async function loadOrders() {
+  const status = document.getElementById('orderStatusFilter')?.value || '';
+  const search = document.getElementById('orderSearch')?.value || '';
+  const res = await apiFetch(`/orders?status=${status}&search=${search}&page=${orderPage}&limit=15`);
+  const tb = document.getElementById('ordersTbody');
+  if (!res.success || !res.orders.length) {
+    tb.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="empty-icon">📭</div><p>No orders found</p></div></td></tr>';
+    return;
+  }
+  orderTotalPages = res.pages;
+  document.getElementById('ordersPagination').textContent = `Page ${res.page} of ${res.pages} · ${res.total} total orders`;
+  document.getElementById('prevPage').disabled = orderPage <= 1;
+  document.getElementById('nextPage').disabled = orderPage >= orderTotalPages;
+
+  tb.innerHTML = res.orders.map(o => `
+    <tr>
+      <td><strong>${o.orderNumber}</strong></td>
+      <td>${o.customer?.name||'—'}</td>
+      <td>${o.customer?.phone||'—'}</td>
+      <td><strong>₹${(o.pricing?.total||0).toLocaleString('en-IN')}</strong></td>
+      <td><span class="badge badge-${o.status}">${o.status}</span></td>
+      <td><span class="badge ${o.payment?.status==='paid'?'badge-paid':'badge-unpaid'}">${o.payment?.status||'pending'}</span></td>
+      <td>${o.isUrgent?'<span class="badge badge-urgent">⚡ YES</span>':'—'}</td>
+      <td>${formatDate(o.createdAt)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="viewOrder('${o._id}')">👁️</button>
+        <button class="btn btn-primary btn-sm" onclick="openStatusModal('${o._id}','${o.status}')">✏️</button>
+      </td>
+    </tr>`).join('');
+}
+
+function changePage(dir) {
+  orderPage = Math.max(1, Math.min(orderTotalPages, orderPage + dir));
+  loadOrders();
+}
+
+async function viewOrder(id) {
+  const res = await apiFetch(`/orders/${id}`);
+  if (!res.success) { showToast('❌ Could not load order'); return; }
+  const o = res.order;
+  document.getElementById('orderModalTitle').textContent = `Order ${o.orderNumber}`;
+
+  const itemsHtml = (o.items||[]).map(i => `
+    <tr>
+      <td style="padding:8px;">${i.name}</td>
+      <td style="padding:8px;text-align:center;">${i.quantity}</td>
+      <td style="padding:8px;text-align:right;">₹${i.unitPrice}</td>
+      <td style="padding:8px;text-align:right;font-weight:700;">₹${i.totalPrice}</td>
+    </tr>`).join('');
+
+  const timelineHtml = (o.statusHistory||[]).reverse().map(h => `
+    <li>
+      <div class="tl-dot">✓</div>
+      <div class="tl-text">
+        <div class="tl-status">${h.status}</div>
+        <div class="tl-time">${formatDate(h.changedAt)}</div>
+        ${h.note?`<div class="tl-note">${h.note}</div>`:''}
+      </div>
+    </li>`).join('');
+
+  document.getElementById('orderModalBody').innerHTML = `
+    <div class="order-detail-grid">
+      <div class="detail-box">
+        <h5>Customer</h5>
+        <p><strong>${o.customer?.name}</strong></p>
+        <p>📞 ${o.customer?.phone}</p>
+        ${o.customer?.email?`<p>✉️ ${o.customer.email}</p>`:''}
+      </div>
+      <div class="detail-box">
+        <h5>Delivery</h5>
+        <p><strong>${o.deliveryInfo?.type||'pickup'}</strong></p>
+        ${o.deliveryInfo?.address?.street?`<p>${o.deliveryInfo.address.street}</p>`:''}
+        ${o.specialInstructions?`<p style="margin-top:6px;color:var(--mid)">📝 ${o.specialInstructions}</p>`:''}
+      </div>
+      <div class="detail-box">
+        <h5>Payment</h5>
+        <p>Status: <span class="badge ${o.payment?.status==='paid'?'badge-paid':'badge-unpaid'}">${o.payment?.status}</span></p>
+        <p>Method: ${o.payment?.method||'—'}</p>
+        ${o.payment?.paidAt?`<p>Paid: ${formatDate(o.payment.paidAt)}</p>`:''}
+      </div>
+      <div class="detail-box">
+        <h5>Pricing</h5>
+        <p>Subtotal: ₹${o.pricing?.subtotal}</p>
+        <p>Delivery: ₹${o.pricing?.deliveryCharge||0}</p>
+        <p style="font-size:16px;font-weight:700;color:var(--accent);margin-top:4px;">Total: ₹${o.pricing?.total}</p>
+      </div>
+    </div>
+    <div class="detail-box" style="margin-bottom:16px;">
+      <h5>Items</h5>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:var(--paper);">
+          <th style="padding:8px;text-align:left;font-size:11px;">Item</th>
+          <th style="padding:8px;text-align:center;font-size:11px;">Qty</th>
+          <th style="padding:8px;text-align:right;font-size:11px;">Unit</th>
+          <th style="padding:8px;text-align:right;font-size:11px;">Total</th>
+        </tr></thead>
+        <tbody>${itemsHtml}</tbody>
+      </table>
+    </div>
+    <div class="detail-box">
+      <h5>Status Timeline</h5>
+      <ul class="timeline">${timelineHtml||'<li style="color:var(--mid)">No history</li>'}</ul>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-primary" onclick="closeModal('orderModal');openStatusModal('${o._id}','${o.status}')">Update Status</button>
+      ${o.payment?.status!=='paid'?`<button class="btn btn-success" onclick="markPaid('${o._id}')">Mark as Paid ✅</button>`:''}
+    </div>`;
+
+  openModal('orderModal');
+}
+
+function openStatusModal(id, current) {
+  document.getElementById('statusOrderId').value = id;
+  document.getElementById('newStatus').value = current;
+  document.getElementById('statusNote').value = '';
+  openModal('statusModal');
+}
+
+async function submitStatusUpdate() {
+  const id     = document.getElementById('statusOrderId').value;
+  const status = document.getElementById('newStatus').value;
+  const note   = document.getElementById('statusNote').value;
+  const res = await apiFetch(`/orders/${id}/status`, 'PATCH', { status, note });
+  if (res.success) {
+    showToast(`✅ Status updated to "${status}"`);
+    closeModal('statusModal');
+    loadOrders();
+  } else showToast('❌ ' + res.message);
+}
+
+async function markPaid(id) {
+  const res = await apiFetch(`/orders/${id}/payment`, 'PATCH', { status: 'paid', method: 'cash' });
+  if (res.success) { showToast('✅ Marked as paid'); closeModal('orderModal'); loadOrders(); }
+  else showToast('❌ ' + res.message);
+}
+
+async function searchOrders() {
+  const q = document.getElementById('globalSearch').value.trim();
+  if (!q) return;
+  showPage('orders', document.querySelector('[onclick*="orders"]'));
+  document.getElementById('orderSearch').value = q;
+  await loadOrders();
+}
+
+// ── PRODUCTS ──────────────────────────────────────
+async function loadProducts() {
+  const res = await apiFetch('/products?limit=50');
+  const tb = document.getElementById('productsTbody');
+  if (!res.success || !res.products.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">🛍️</div><p>No products yet</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = res.products.map(p => `
+    <tr>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="badge" style="background:rgba(10,10,15,.06);color:var(--mid);">${p.category}</span></td>
+      <td>₹${p.price?.base} <span style="color:var(--mid);font-size:12px;">${p.price?.unit||''}</span></td>
+      <td><span class="badge ${p.inStock?'badge-ready':'badge-cancelled'}">${p.inStock?'In Stock':'Out'}</span></td>
+      <td>${p.featured?'⭐':'-'}</td>
+      <td>${p.totalOrders||0}</td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn btn-secondary btn-sm" onclick="editProduct(${JSON.stringify(p).replace(/"/g,'&quot;')})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p._id}')">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openProductModal(product = null) {
+  document.getElementById('productModalTitle').textContent = product ? 'Edit Product' : 'Add Product';
+  document.getElementById('productId').value    = product?._id || '';
+  document.getElementById('pName').value         = product?.name || '';
+  document.getElementById('pCategory').value     = product?.category || 'tshirt';
+  document.getElementById('pPrice').value        = product?.price?.base || '';
+  document.getElementById('pUnit').value         = product?.price?.unit || 'per piece';
+  document.getElementById('pDesc').value         = product?.description || '';
+  document.getElementById('pMinQty').value       = product?.minQuantity || 1;
+  document.getElementById('pDays').value         = product?.deliveryDays || 2;
+  document.getElementById('pFeatured').checked   = product?.featured || false;
+  document.getElementById('pInStock').checked    = product?.inStock !== false;
+  openModal('productModal');
+}
+
+function editProduct(p) { openProductModal(p); }
+
+async function saveProduct() {
+  const id = document.getElementById('productId').value;
+  const body = {
+    name: document.getElementById('pName').value,
+    category: document.getElementById('pCategory').value,
+    'price[base]': document.getElementById('pPrice').value,
+    'price[unit]': document.getElementById('pUnit').value,
+    description: document.getElementById('pDesc').value,
+    minQuantity: document.getElementById('pMinQty').value,
+    deliveryDays: document.getElementById('pDays').value,
+    featured: document.getElementById('pFeatured').checked,
+    inStock: document.getElementById('pInStock').checked,
+  };
+  // Flatten price object for JSON API
+  const payload = {
+    name: body.name, category: body.category,
+    price: { base: Number(document.getElementById('pPrice').value), unit: document.getElementById('pUnit').value },
+    description: body.description,
+    minQuantity: Number(body.minQuantity),
+    deliveryDays: Number(body.deliveryDays),
+    featured: document.getElementById('pFeatured').checked,
+    inStock: document.getElementById('pInStock').checked,
+  };
+  const method = id ? 'PUT' : 'POST';
+  const path   = id ? `/products/${id}` : '/products';
+  const res = await apiFetch(path, method, payload);
+  if (res.success) { showToast('✅ Product saved!'); closeModal('productModal'); loadProducts(); }
+  else showToast('❌ ' + res.message);
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  const res = await apiFetch(`/products/${id}`, 'DELETE');
+  if (res.success) { showToast('🗑️ Product deleted'); loadProducts(); }
+  else showToast('❌ ' + res.message);
+}
+
+// ── SERVICES ──────────────────────────────────────
+async function loadServices() {
+  const res = await apiFetch('/services');
+  const tb = document.getElementById('servicesTbody');
+  if (!res.success || !res.services.length) {
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">⚙️</div><p>No services yet. Run seed script.</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = res.services.map(s => `
+    <tr>
+      <td>${s.icon||''} <strong>${s.name}</strong></td>
+      <td><span class="badge" style="background:rgba(10,10,15,.06);color:var(--mid);">${s.category}</span></td>
+      <td>₹${s.pricing?.startingFrom} <span style="color:var(--mid);font-size:12px;">${s.pricing?.unit||''}</span></td>
+      <td>${s.estimatedTime||'—'}</td>
+      <td><span class="badge ${s.isAvailable?'badge-ready':'badge-cancelled'}">${s.isAvailable?'Yes':'No'}</span></td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn btn-secondary btn-sm" onclick="editService(${JSON.stringify(s).replace(/"/g,'&quot;')})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteService('${s._id}')">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openServiceModal(service = null) {
+  document.getElementById('serviceModalTitle').textContent = service ? 'Edit Service' : 'Add Service';
+  document.getElementById('serviceId').value    = service?._id || '';
+  document.getElementById('sName').value         = service?.name || '';
+  document.getElementById('sIcon').value         = service?.icon || '🖨️';
+  document.getElementById('sCategory').value     = service?.category || 'printing';
+  document.getElementById('sPrice').value        = service?.pricing?.startingFrom || '';
+  document.getElementById('sPriceUnit').value    = service?.pricing?.unit || 'per page';
+  document.getElementById('sTime').value         = service?.estimatedTime || '';
+  document.getElementById('sDesc').value         = service?.description || '';
+  openModal('serviceModal');
+}
+function editService(s) { openServiceModal(s); }
+
+async function saveService() {
+  const id = document.getElementById('serviceId').value;
+  const payload = {
+    name: document.getElementById('sName').value,
+    icon: document.getElementById('sIcon').value,
+    category: document.getElementById('sCategory').value,
+    pricing: { startingFrom: Number(document.getElementById('sPrice').value), unit: document.getElementById('sPriceUnit').value },
+    estimatedTime: document.getElementById('sTime').value,
+    description: document.getElementById('sDesc').value,
+  };
+  const method = id ? 'PUT' : 'POST';
+  const path   = id ? `/admin/services/${id}` : '/admin/services';
+  const res = await apiFetch(path, method, payload);
+  if (res.success) { showToast('✅ Service saved!'); closeModal('serviceModal'); loadServices(); }
+  else showToast('❌ ' + res.message);
+}
+
+async function deleteService(id) {
+  if (!confirm('Delete this service?')) return;
+  const res = await apiFetch(`/admin/services/${id}`, 'DELETE');
+  if (res.success) { showToast('🗑️ Service deleted'); loadServices(); }
+  else showToast('❌ ' + res.message);
+}
+
+// ── CUSTOMERS ─────────────────────────────────────
+async function loadCustomers() {
+  const res = await apiFetch('/admin/users?role=customer');
+  const tb = document.getElementById('customersTbody');
+  if (!res.success || !res.users.length) {
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">👥</div><p>No customers yet</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = res.users.map(u => `
+    <tr>
+      <td><strong>${u.name}</strong></td>
+      <td>${u.email}</td>
+      <td>${u.phone||'—'}</td>
+      <td>${formatDate(u.createdAt)}</td>
+      <td><span class="badge ${u.isActive?'badge-ready':'badge-cancelled'}">${u.isActive?'Active':'Inactive'}</span></td>
+      <td>
+        <button class="btn ${u.isActive?'btn-danger':'btn-success'} btn-sm" onclick="toggleUser('${u._id}')">
+          ${u.isActive?'Deactivate':'Activate'}
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+async function toggleUser(id) {
+  const res = await apiFetch(`/admin/users/${id}/toggle`, 'PATCH');
+  if (res.success) { showToast('✅ User status updated'); loadCustomers(); }
+  else showToast('❌ ' + res.message);
+}
+
+// ── MESSAGES ──────────────────────────────────────
+async function loadMessages() {
+  const res = await apiFetch('/admin/messages');
+  const tb = document.getElementById('messagesTbody');
+  const unread = (res.messages||[]).filter(m => !m.isRead).length;
+  const badge = document.getElementById('msgBadge');
+  badge.style.display = unread > 0 ? 'inline' : 'none';
+  if (!res.success || !res.messages.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">✉️</div><p>No messages yet</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = res.messages.map(m => `
+    <tr style="${!m.isRead?'background:rgba(255,61,0,.03);font-weight:500;':''}">
+      <td>${m.name}</td>
+      <td>${m.phone||'—'}</td>
+      <td>${m.subject||'—'}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.message}</td>
+      <td>${formatDate(m.createdAt)}</td>
+      <td><span class="badge ${m.isRead?'badge-delivered':'badge-pending'}">${m.isRead?'Read':'New'}</span></td>
+      <td>${!m.isRead?`<button class="btn btn-secondary btn-sm" onclick="markRead('${m._id}')">Mark Read</button>`:'—'}</td>
+    </tr>`).join('');
+}
+
+async function markRead(id) {
+  const res = await apiFetch(`/admin/messages/${id}/read`, 'PATCH');
+  if (res.success) loadMessages();
+}
+
+// ── UTILS ─────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el =>
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); })
+);
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+// Mobile menu toggle
+if (window.innerWidth < 900) {
+  document.getElementById('menuToggle').style.display = 'block';
+}
+</script>
+</body>
+</html>
