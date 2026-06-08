@@ -779,7 +779,7 @@ const observer=new IntersectionObserver(entries=>{
 reveals.forEach(r=>observer.observe(r));
 
 // ── TOAST ──
-const API_BASE='http://localhost:5000/api/v1';
+const API_BASE = 'https://kishan-creation-api.onrender.com/api/v1';
 function showToast(msg,type='default'){
   const t=document.getElementById('toast');
   t.textContent=msg;
